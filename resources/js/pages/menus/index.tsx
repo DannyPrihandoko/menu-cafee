@@ -64,7 +64,7 @@ export default function Index({ menus }: { menus: FindAllMenuResponse }) {
                         <When
                             condition={isReordering}
                             fallback={
-                                <Button variant="outline" onClick={() => setIsReordering(true)} disabled={menus.data.length > 1}>
+                                <Button variant="outline" onClick={() => setIsReordering(true)} disabled={menus.data.length < 2}>
                                     Edit Posisi
                                 </Button>
                             }
