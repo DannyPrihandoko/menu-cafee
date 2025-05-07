@@ -1,3 +1,4 @@
+import MenuController from '@/actions/App/Http/Controllers/MenuController';
 import Heading from '@/components/heading';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
@@ -34,7 +35,7 @@ export default function Edit({ menu }: { menu: FindMenuResponse }) {
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        post(route('menus.update', [menu.data]));
+        post(MenuController.update({ menu: menu.data }).url);
     };
 
     return (

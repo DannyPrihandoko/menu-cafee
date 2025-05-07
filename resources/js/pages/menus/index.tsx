@@ -1,3 +1,4 @@
+import MenuReorderingController from '@/actions/App/Http/Controllers/MenuReorderingController';
 import Heading from '@/components/heading';
 import When from '@/components/shared/when';
 import {
@@ -48,7 +49,8 @@ export default function Index({ menus }: { menus: FindAllMenuResponse }) {
     });
 
     const reorderingMenus = () => {
-        router.put(route('menus.reorder', { menus: reorderedMenus.map((menu) => menu.id) }));
+        const menus = reorderedMenus.map((menu) => menu.id.toString());
+        router.put(MenuReorderingController({ query: { menus } }).url);
         setIsReordering(false);
     };
 
