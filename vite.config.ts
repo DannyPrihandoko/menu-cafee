@@ -33,13 +33,23 @@ export default defineConfig({
             },
         },
 
-        run([
-            {
-                name: 'wayfinder',
-                run: ['php', 'artisan', 'wayfinder:generate'],
-                pattern: ['routes/**/*.php', 'app/**/Http/**/*.php'],
+        // This will continue handling dev mode file changes
+        run({
+            name: 'wayfinder',
+            pattern: ['routes/**/*.php', 'app/**/Http/**/*.php'],
+            onFileChanged: ({ file }) => {
+                console.log(`File changed: ${file}, generating routes...`);
+                try {
+                    // This runs synchronously and will block until complete
+                    execSync('php artisan wayfinder:generate --path=resources/js --with-form', {
+                        stdio: 'inherit',
+                    });
+                    console.log('Routes generated successfully');
+                } catch (error) {
+                    console.error('Error generating routes:', error);
+                }
             },
-        ]),
+        }),
     ],
     esbuild: {
         jsx: 'automatic',
