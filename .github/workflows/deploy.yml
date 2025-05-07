@@ -12,26 +12,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.3
-
-      - name: Install Dependencies
-        run: |
-          composer install --no-dev --optimize-autoloader
-
-      - name: Install Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 23
-
-      - name: Install NPM Dependencies
-        run: npm install
-
-      - name: Build Assets
-        run: npm run build
-
       - name: Syncronize Files to Server
         uses: easingthemes/ssh-deploy@main
         env:
@@ -41,7 +21,7 @@ jobs:
           REMOTE_USER: ${{ secrets.SSH_VPS_USER }}
           TARGET: '/var/www/html/teresa'
 
-      - name: Run Remote/Artisan Commands
+      - name: Build and Deploy on VPS
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_VPS_HOST }}
@@ -49,5 +29,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /var/www/html/teresa
+            composer install --no-dev --optimize-autoloader
+            npm install
+            npm run build
             php artisan migrate --force
             php artisan optimize
